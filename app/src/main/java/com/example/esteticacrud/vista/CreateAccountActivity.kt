@@ -39,9 +39,20 @@ class CreateAccountActivity : AppCompatActivity() {
     }
 
     private fun createUser(name: String, password: String) {
-        val newUser = Usuario(SessionManager.instance.usuarios.size + 1, name, password)
-        SessionManager.instance.usuarios.add(newUser)
-        Toast.makeText(this, "Usuario $name creado exitosamente", Toast.LENGTH_SHORT).show()
+        val sessionManager = SessionManager.instance
+
+        // Verificar si ya existe un usuario con el mismo nombre
+        val existingUser = sessionManager.usuarios.find { it.nombre == name }
+
+        if (existingUser == null) {
+            // No hay un usuario con el mismo nombre, crear uno nuevo
+            val newUser = Usuario(sessionManager.usuarios.size + 1, name, password)
+            sessionManager.usuarios.add(newUser)
+            Toast.makeText(this, "Usuario $name creado exitosamente", Toast.LENGTH_SHORT).show()
+        } else {
+            // Ya existe un usuario con el mismo nombre, mostrar un mensaje de error
+            Toast.makeText(this, "Ya existe un usuario con el nombre $name", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun createEmployee(name: String, password: String) {

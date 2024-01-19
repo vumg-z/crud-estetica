@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">EsteticaCrud</string>
+    <string name="username_hint" > usuario </string>
+    <string name="password_hint">contraseña</string>
+    <string name="login_button_text">login</string>
+    <string name="delete">delete</string>
+</resources>

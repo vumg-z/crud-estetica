@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- EditText para el nombre del cliente -->
+    <TextView
+        android:id="@+id/editTextCliente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nombre del cliente: "
+         />
+
+    <!-- Spinner para seleccionar el servicio -->
+    <Spinner
+        android:id="@+id/spinnerServicio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <!-- Botón para seleccionar la fecha -->
+    <Button
+        android:id="@+id/buttonFecha"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Seleccionar Fecha"/>
+
+    <!-- Botón para seleccionar la hora -->
+    <Button
+        android:id="@+id/buttonHora"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Seleccionar Hora"/>
+
+    <!-- Spinner para seleccionar el empleado asignado -->
+    <Spinner
+        android:id="@+id/spinnerEmpleado"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <!-- Botón para agendar la cita -->
+    <Button
+        android:id="@+id/buttonAgendar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Agendar Cita"
+        android:layout_gravity="center_horizontal" />
+
+</LinearLayout>

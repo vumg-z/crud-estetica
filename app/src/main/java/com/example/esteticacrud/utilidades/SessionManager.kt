@@ -19,7 +19,11 @@ class SessionManager private constructor()  {
     }
 
     fun obtenerCitas(): List<Cita> {
-        return citas
+        usuarioActual?.let { usuario ->
+            return citas.filter { cita -> cita.cliente.nombre == usuario.nombre }
+        }
+        // Si no hay usuario autenticado, devolver una lista vacía
+        return emptyList()
     }
 
 

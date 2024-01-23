@@ -22,24 +22,73 @@ class CitasController {
     }
 
     fun agregarCita(cliente: Usuario, servicio: Servicio, fechaHora: LocalDateTime, empleadoAsignado: Empleado): Cita {
+        val finCita = fechaHora.plusHours(servicio.duracion.toLong())
+
+        val superposicionEmpleado = sessionManager.obtenerCitas().any { citaExistente ->
+            val finCitaExistente = citaExistente.fechaHora.plusHours(citaExistente.servicio.duracion.toLong())
+            citaExistente.empleadoAsignado.nombre == empleadoAsignado.nombre &&
+                    citaExistente.fechaHora.isBefore(finCita) && finCitaExistente.isAfter(fechaHora)
+        }
+
+        val superposicionCliente = sessionManager.obtenerCitas().any { citaExistente ->
+            val finCitaExistente = citaExistente.fechaHora.plusHours(citaExistente.servicio.duracion.toLong())
+            citaExistente.cliente.nombre == cliente.nombre &&
+                    citaExistente.fechaHora.isBefore(finCita) && finCitaExistente.isAfter(fechaHora)
+        }
+
+        if (superposicionEmpleado) {
+            throw Exception("El empleado ya tiene una cita en este horario.")
+        }
+
+        if (superposicionCliente) {
+            throw Exception("El cliente ya tiene una cita en este horario.")
+        }
+
         val nuevaCita = Cita(nextId++, cliente, servicio, fechaHora, empleadoAsignado)
         sessionManager.agregarCita(nuevaCita)
         return nuevaCita
     }
 
+
     fun eliminarCita(id: Int) {
         citas.removeIf { it.id == id }
     }
 
-    fun actualizarCita(id: Int, nuevaFechaHora: LocalDateTime) {
-        citas.find { it.id == id }?.let {
-            it.fechaHora = nuevaFechaHora
-            // Otras actualizaciones necesarias
+    fun actualizarCita(id: Int, nuevoCliente: Usuario, nuevoServicio: Servicio, nuevaFechaHora: LocalDateTime, nuevoEmpleado: Empleado) {
+        val finNuevaCita = nuevaFechaHora.plusHours(nuevoServicio.duracion.toLong())
+
+        val superposicionEmpleado = sessionManager.obtenerCitas().any { citaExistente ->
+            val finCitaExistente = citaExistente.fechaHora.plusHours(citaExistente.servicio.duracion.toLong())
+            citaExistente.id != id &&
+                    citaExistente.empleadoAsignado.nombre == nuevoEmpleado.nombre &&
+                    citaExistente.fechaHora.isBefore(finNuevaCita) &&
+                    finCitaExistente.isAfter(nuevaFechaHora)
         }
+
+        val superposicionCliente = sessionManager.obtenerCitas().any { citaExistente ->
+            val finCitaExistente = citaExistente.fechaHora.plusHours(citaExistente.servicio.duracion.toLong())
+            citaExistente.id != id &&
+                    citaExistente.cliente.nombre == nuevoCliente.nombre &&
+                    citaExistente.fechaHora.isBefore(finNuevaCita) &&
+                    finCitaExistente.isAfter(nuevaFechaHora)
+        }
+
+        if (superposicionEmpleado || superposicionCliente) {
+            throw Exception("La cita se superpone con otra cita existente.")
+        }
+
+        sessionManager.actualizarCita(id, nuevoCliente, nuevoServicio, nuevaFechaHora, nuevoEmpleado)
     }
 
+
+
+
+
     fun obtenerCitaPorId(id: Int): Cita? {
-        return citas.find { it.id == id }
+        val usuarioActual = SessionManager.instance.usuarioActual
+        return SessionManager.instance.obtenerCitas().find { cita ->
+            cita.id == id && cita.cliente.nombre == usuarioActual?.nombre
+        }
     }
 
     fun cancelarCita(citaId: Int) {

@@ -1,10 +1,12 @@
 package com.example.esteticacrud.vista
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.ListView
 import android.widget.TextView
@@ -39,6 +41,20 @@ class ListUsersEmployeesActivity : AppCompatActivity() {
                 val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.list_item_user_employee, parent, false)
                 val textViewName = view.findViewById<TextView>(R.id.textViewName)
                 val imageViewDelete = view.findViewById<ImageView>(R.id.imageViewDelete)
+
+                // Dentro de tu adaptador en setupListView
+                val buttonEdit = view.findViewById<Button>(R.id.buttonEdit)
+                buttonEdit.setOnClickListener {
+                    val selectedItem = getItem(position)
+                    if (selectedItem != null && selectedItem.startsWith("Employee: ")) {
+                        val employeeName = selectedItem.removePrefix("Employee: ")
+
+                        val intent = Intent(this@ListUsersEmployeesActivity, EditarEmpleadoActivity::class.java)
+                        intent.putExtra("OLD_EMPLOYEE_NAME", employeeName) // Paso el nombre antiguo como extra
+                        startActivity(intent)
+                    }
+                }
+
 
                 textViewName.text = getItem(position) // Set the name
                 imageViewDelete.setOnClickListener {

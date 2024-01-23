@@ -1,5 +1,6 @@
 package com.example.esteticacrud.vista
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -49,6 +50,12 @@ class VerCitasActivity : AppCompatActivity() {
                 adapter.notifyItemRemoved(citaIndex)
                 adapter.notifyItemRangeChanged(citaIndex, listaDeCitas.size)
             }
+        }, onCitaEdit = { cita ->
+            // Lógica para editar la cita, como abrir una nueva actividad
+            // Por ejemplo:
+            val intent = Intent(this, EditarCitaActivity::class.java)
+            intent.putExtra("CITA_ID", cita.id)
+            startActivity(intent)
         })
 
         recyclerView.adapter = adapter  // Set the adapter on the RecyclerView

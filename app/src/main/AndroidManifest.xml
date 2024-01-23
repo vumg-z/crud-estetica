@@ -58,7 +58,17 @@
             <!-- Puedes agregar más configuraciones aquí si es necesario -->
         </activity>
 
+        <!-- Declaración de VistaUsuarioActivity -->
+        <activity android:name=".vista.EditarCitaActivity"
+            android:exported="false">
+            <!-- Puedes agregar más configuraciones aquí si es necesario -->
+        </activity>
 
+        <!-- Declaración de VistaUsuarioActivity -->
+        <activity android:name=".vista.EditarEmpleadoActivity"
+            android:exported="false">
+            <!-- Puedes agregar más configuraciones aquí si es necesario -->
+        </activity>
 
 
     </application>

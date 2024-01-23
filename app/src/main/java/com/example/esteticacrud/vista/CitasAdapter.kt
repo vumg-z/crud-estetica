@@ -13,7 +13,8 @@ import org.w3c.dom.Text
 
 class CitasAdapter(
     private val citas: MutableList<Cita>,
-    private val onCitaCancel: (Int) -> Unit
+    private val onCitaCancel: (Int) -> Unit,
+    private val onCitaEdit: (Cita) -> Unit
 ) : RecyclerView.Adapter<CitasAdapter.CitaViewHolder>() {
 
     class CitaViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -23,6 +24,8 @@ class CitasAdapter(
         val textViewServicio: TextView = view.findViewById(R.id.textViewServicio)
         val textViewEmpleado: TextView = view.findViewById(R.id.textViewEmpleado)
         val buttonCancelarCita: Button = view.findViewById(R.id.buttonCancelarCita)
+        // editar cita
+        val buttonEditarCita: Button = view.findViewById(R.id.buttonEditarCita)
 
 
     }
@@ -58,6 +61,10 @@ class CitasAdapter(
 
             // Finally, remove the cita from the main data set in CitasController or SessionManager.
             onCitaCancel(citaToRemove.id)
+        }
+
+        holder.buttonEditarCita.setOnClickListener {
+            onCitaEdit(citas[position])
         }
 
 

@@ -2,7 +2,9 @@ package com.example.esteticacrud.utilidades
 
 import com.example.esteticacrud.modelo.Cita
 import com.example.esteticacrud.modelo.Empleado
+import com.example.esteticacrud.modelo.Servicio
 import com.example.esteticacrud.modelo.Usuario
+import java.time.LocalDateTime
 
 class SessionManager private constructor()  {
 
@@ -65,4 +67,21 @@ class SessionManager private constructor()  {
     fun eliminarEmpleado(nombre: String) {
         empleados.removeIf { it.nombre == nombre }
     }
+
+    fun actualizarCita(id: Int, nuevoCliente: Usuario, nuevoServicio: Servicio, nuevaFechaHora: LocalDateTime, nuevoEmpleado: Empleado) {
+        citas.find { it.id == id }?.let { cita ->
+            cita.cliente = nuevoCliente
+            cita.servicio = nuevoServicio
+            cita.fechaHora = nuevaFechaHora
+            cita.empleadoAsignado = nuevoEmpleado
+        }
+    }
+
+    fun actualizarEmpleadoNombre(nombreAntiguo: String, nombreNuevo: String) {
+        val empleado = empleados.find { it.nombre == nombreAntiguo }
+        empleado?.nombre = nombreNuevo
+    }
+
+
+
 }

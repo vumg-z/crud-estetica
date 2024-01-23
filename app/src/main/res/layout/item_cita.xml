@@ -41,18 +41,28 @@
             android:text="Empleado Asignado" />
     </LinearLayout>
 
+    <!-- Botón Editar -->
+
+    <!-- Botón Cancelar -->
+
     <Button
-        android:id="@+id/buttonCancelarCita"
-        android:layout_width="120dp"
+        android:id="@+id/buttonEditarCita"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="134dp"
-        android:layout_toEndOf="@id/linearLayoutCitaInfo"
+        android:layout_marginEnd="0dp"
+        android:background="@null"
+        android:text="Edit" />
+
+    <Button
+        android:id="@+id/buttonCancelarCita"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/buttonEditarCita"
         android:background="@null"
         android:drawableEnd="@drawable/ic_cancel"
         android:gravity="center"
-        android:paddingEnd="16dp"
+        android:paddingEnd="15dp"
         android:text="" />
 
 

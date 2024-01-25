@@ -1,5 +1,6 @@
 package com.example.esteticacrud.vista
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,6 +18,16 @@ import com.example.esteticacrud.utilidades.SessionManager
 class ListUsersEmployeesActivity : AppCompatActivity() {
 
     private lateinit var listView: ListView
+    companion object {
+        private const val REQUEST_CODE_EDIT_EMPLOYEE = 1
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_EDIT_EMPLOYEE && resultCode == Activity.RESULT_OK) {
+            setupListView() // Refresca la lista
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,10 +61,11 @@ class ListUsersEmployeesActivity : AppCompatActivity() {
                         val employeeName = selectedItem.removePrefix("Employee: ")
 
                         val intent = Intent(this@ListUsersEmployeesActivity, EditarEmpleadoActivity::class.java)
-                        intent.putExtra("OLD_EMPLOYEE_NAME", employeeName) // Paso el nombre antiguo como extra
-                        startActivity(intent)
+                        intent.putExtra("OLD_EMPLOYEE_NAME", employeeName)
+                        startActivityForResult(intent, REQUEST_CODE_EDIT_EMPLOYEE) // Utiliza un código de solicitud
                     }
                 }
+
 
 
                 textViewName.text = getItem(position) // Set the name

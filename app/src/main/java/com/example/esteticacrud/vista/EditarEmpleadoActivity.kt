@@ -1,5 +1,6 @@
 package com.example.esteticacrud.vista
 
+import android.app.Activity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -51,9 +52,15 @@ class EditarEmpleadoActivity : AppCompatActivity() {
             val sessionManager = SessionManager.instance
             sessionManager.actualizarEmpleadoNombre(oldName, updatedName)
             Toast.makeText(this, "Empleado actualizado con éxito", Toast.LENGTH_SHORT).show()
+            setResult(Activity.RESULT_OK) // Establece el resultado para `ListUsersEmployeesActivity`
             finish() // Cierra la actividad y regresa a la anterior
         } ?: run {
             Toast.makeText(this, "Error: nombre antiguo no disponible", Toast.LENGTH_SHORT).show()
         }
+
+        setResult(Activity.RESULT_OK) // Establece el resultado para `ListUsersEmployeesActivity`
+        finish() // Cierra la actividad y regresa a la anterior
     }
+
+
 }

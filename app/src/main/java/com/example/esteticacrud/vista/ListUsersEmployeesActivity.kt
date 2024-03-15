@@ -69,6 +69,7 @@ class ListUsersEmployeesActivity : AppCompatActivity() {
 
 
                 textViewName.text = getItem(position) // Set the name
+
                 imageViewDelete.setOnClickListener {
                     val selectedItem = getItem(position)
                     if (selectedItem != null) {

@@ -1,9 +1,16 @@
 package com.example.esteticacrud.vista
 
+import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.esteticacrud.R
@@ -27,6 +34,31 @@ class VerCitasActivity : AppCompatActivity() {
         setupRecyclerView()
     }
 
+    @SuppressLint("MissingPermission")
+    private fun enviarNotificacionCitaEliminada(citaId: Int) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelID = "CITA_ELIMINACION_CHANNEL"
+            val name = getString(R.string.channel_name_eliminacion) // Debes agregar esto en strings.xml
+            val descriptionText = getString(R.string.channel_description_eliminacion) // Debes agregar esto en strings.xml
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(channelID, name, importance).apply {
+                description = descriptionText
+            }
+            val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        val builder = NotificationCompat.Builder(this, "CITA_ELIMINACION_CHANNEL")
+            .setSmallIcon(R.drawable.ic_launcher_foreground) // Asegúrate de tener este recurso gráfico
+            .setContentTitle(getString(R.string.notification_title_eliminacion)) // Agrega esto en strings.xml
+            .setContentText(getString(R.string.notification_content_eliminacion)) // Agrega esto en strings.xml
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+        with(NotificationManagerCompat.from(this)) {
+            notify(citaId, builder.build())
+        }
+    }
+
 
     private fun obtenerCitas(): List<Cita> {
         return SessionManager.instance.obtenerCitas()
@@ -35,13 +67,15 @@ class VerCitasActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         val listaDeCitas = SessionManager.instance.obtenerCitas().toMutableList()
 
-        // Create the adapter with the list and a lambda function to handle cancellation
+        // Crea el adaptador con la lista y una función lambda para manejar la cancelación
         adapter = CitasAdapter(listaDeCitas, onCitaCancel = { citaId ->
             CitasController().cancelarCita(citaId)
             Log.d("VerCitasActivity", "Request to cancel Cita ID: $citaId")
 
+            // Enviar notificación de cita cancelada
+            enviarNotificacionCitaEliminada(citaId)
 
-            // Remove the canceled cita from the adapter's data set
+            // Remover la cita cancelada del conjunto de datos del adaptador
             val citaIndex = listaDeCitas.indexOfFirst { it.id == citaId }
             if (citaIndex != -1) {
                 Log.d("VerCitasActivity", "Removing Cita at index: $citaIndex")
@@ -53,13 +87,15 @@ class VerCitasActivity : AppCompatActivity() {
         }, onCitaEdit = { cita ->
             // Lógica para editar la cita, como abrir una nueva actividad
             // Por ejemplo:
-            val intent = Intent(this, EditarCitaActivity::class.java)
-            intent.putExtra("CITA_ID", cita.id)
+            val intent = Intent(this, EditarCitaActivity::class.java).apply {
+                putExtra("CITA_ID", cita.id)
+            }
             startActivity(intent)
         })
 
-        recyclerView.adapter = adapter  // Set the adapter on the RecyclerView
+        recyclerView.adapter = adapter  // Establecer el adaptador en el RecyclerView
     }
+
 
 }
 

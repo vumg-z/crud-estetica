@@ -1,7 +1,12 @@
 package com.example.esteticacrud.vista
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.TimePickerDialog
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter
@@ -10,6 +15,8 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.example.esteticacrud.R
 import com.example.esteticacrud.controlador.CitasController
 import com.example.esteticacrud.modelo.Cita
@@ -35,6 +42,9 @@ class EditarCitaActivity : AppCompatActivity() {
     private val citasController = CitasController()
     private var citaId: Int = -1
     private var cita: Cita? = null
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

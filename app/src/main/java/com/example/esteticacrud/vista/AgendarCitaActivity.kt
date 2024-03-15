@@ -1,7 +1,12 @@
 package com.example.esteticacrud.vista
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.TimePickerDialog
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter
@@ -11,6 +16,8 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.example.esteticacrud.R
 import com.example.esteticacrud.controlador.CitasController
 import com.example.esteticacrud.modelo.Empleado
@@ -36,6 +43,38 @@ class AgendarCitaActivity : AppCompatActivity() {
     private lateinit var spinnerEmpleado: Spinner
     private lateinit var buttonAgendar: Button
     private val citasController = CitasController()
+
+    @SuppressLint("MissingPermission")
+    private fun enviarNotificacionCitaCreada(citaId: Int) {
+        // Crear el canal de notificaciones (o asegurarse de que se ha creado)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelID = "CITA_CREACION_CHANNEL" // Identificador del canal de notificaciones
+            val name = getString(R.string.channel_name) // Nombre del canal (visible para el usuario)
+            val descriptionText = getString(R.string.channel_description) // Descripción del canal (visible para el usuario)
+            val importance = NotificationManager.IMPORTANCE_HIGH // Establece la importancia para mostrar interrupciones
+            val channel = NotificationChannel(channelID, name, importance).apply {
+                description = descriptionText
+                enableLights(true) // Habilita luces para notificaciones en este canal, si el dispositivo lo soporta
+                enableVibration(true) // Habilita vibración para notificaciones en este canal
+            }
+            // Registrar el canal en el sistema
+            val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        // Construir la notificación
+        val builder = NotificationCompat.Builder(this, "CITA_CREACION_CHANNEL")
+            .setSmallIcon(R.drawable.ic_launcher_foreground) // Asegúrate de tener este recurso gráfico
+            .setContentTitle(getString(R.string.notification_title)) // Título de la notificación
+            .setContentText(getString(R.string.notification_content)) // Contenido de la notificación
+            .setPriority(NotificationCompat.PRIORITY_HIGH) // Establece la prioridad para las interrupciones
+            .setVibrate(longArrayOf(1000, 500, 1000, 500)) // Patrón de vibración: espera, vibra, espera, vibra
+
+        // Mostrar la notificación
+        with(NotificationManagerCompat.from(this)) {
+            notify(citaId, builder.build()) // Usar citaId asegura un identificador único para cada notificación
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,7 +135,10 @@ class AgendarCitaActivity : AppCompatActivity() {
             val empleado = SessionManager.instance.empleados.find { it.nombre == nombreEmpleado } ?: throw Exception("Empleado no encontrado")
 
 
+
             val cita = citasController.agregarCita(cliente, servicio, dateTime, empleado)
+            // Enviar notificación de cita creada
+            enviarNotificacionCitaCreada(cita.id)
             Toast.makeText(this, "Cita Agendada: ${cita.id}", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             Toast.makeText(this, "Error al agendar la cita: ${e.message}", Toast.LENGTH_SHORT).show()

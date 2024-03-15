@@ -1,7 +1,19 @@
 <resources>
     <string name="app_name">EsteticaCrud</string>
-    <string name="username_hint" > usuario </string>
+    <string name="username_hint">usuario</string>
     <string name="password_hint">contraseña</string>
     <string name="login_button_text">login</string>
     <string name="delete">delete</string>
+
+    <!-- Recursos de cadena adicionales para notificaciones -->
+    <string name="channel_name">Notificaciones de Cita</string>
+    <string name="channel_description">Notificaciones para citas agendadas</string>
+    <string name="notification_title">Cita Agendada</string>
+    <string name="notification_content">Tu cita ha sido agendada con éxito.</string>
+
+    <string name="channel_name_eliminacion">Notificaciones de Eliminación de Cita</string>
+    <string name="channel_description_eliminacion">Notificaciones para citas eliminadas</string>
+    <string name="notification_title_eliminacion">Cita Eliminada</string>
+    <string name="notification_content_eliminacion">Tu cita ha sido eliminada con éxito.</string>
+
 </resources>

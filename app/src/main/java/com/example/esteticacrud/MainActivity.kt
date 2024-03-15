@@ -1,6 +1,10 @@
 package com.example.esteticacrud
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -32,6 +36,20 @@ class MainActivity : AppCompatActivity() {
         loginButton.setOnClickListener {
             performLogin()
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "Notificaciones de Cita"
+            val descriptionText = "Notificaciones para citas creadas"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel("CITA_CREACION_CHANNEL", name, importance).apply {
+                description = descriptionText
+            }
+            // Registrar el canal en el sistema
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+
     }
 
     private fun performLogin() {

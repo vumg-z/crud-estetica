@@ -1,5 +1,8 @@
 package com.example.esteticacrud.controlador
 
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import com.example.esteticacrud.R
 import com.example.esteticacrud.modelo.Cita
 import com.example.esteticacrud.modelo.Empleado
 import com.example.esteticacrud.modelo.Servicio
@@ -20,6 +23,7 @@ class CitasController {
     fun obtenerCitas(): List<Cita> {
         return sessionManager.obtenerCitas()
     }
+
 
     fun agregarCita(cliente: Usuario, servicio: Servicio, fechaHora: LocalDateTime, empleadoAsignado: Empleado): Cita {
         val finCita = fechaHora.plusHours(servicio.duracion.toLong())
